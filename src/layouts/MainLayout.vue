@@ -1,45 +1,34 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf" class="shadow-2">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-toolbar-title>GIF App</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
+      <q-drawer
+        v-model="leftDrawerOpen"
+        show-if-above
+        class="bg-blue-900 text-gray-300 rounded-r-lg border-none"
+      >
+        <q-list>
+          <q-item
+            v-for="item in menuItems"
+            :key="item.to"
+            :to="item.to"
+            :exact="item.exact"
+            clickable
+          >
+            <q-item-section avatar>
+              <q-icon :name="item.icon" />
+            </q-item-section>
+            <q-item-section>{{ item.title }}</q-item-section>
+          </q-item>
+        </q-list>
+      </q-drawer>
+
       <router-view />
     </q-page-container>
   </q-layout>
@@ -47,56 +36,61 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
-
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
 
 const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
+const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+};
+const menuItems = [
+  { to: '/', title: 'Home', icon: 'home', exact: true },
+  { to: '/favorites', title: 'Favorites', icon: 'star' },
+  { to: '/categories', title: 'Categories', icon: 'view_headline' },
+  { to: '/about', title: 'About', icon: 'record_voice_over' },
+];
+// import { ref, shallowRef } from 'vue';
+// import HomeContent from 'components/contents/HomeContent.vue';
+// import FavoritosContent from 'components/contents/FavoritosContent.vue';
+// import CategoriasContent from 'components/contents/CategoriasContent.vue';
+// import SobreContent from 'components/contents/SobreContent.vue';
+
+// const componentsMap = {
+//   HomeContent,
+//   FavoritosContent,
+//   CategoriasContent,
+//   SobreContent,
+// };
+
+// const activeComponent = shallowRef(componentsMap['HomeContent']);
+
+// const leftDrawerOpen = ref(false);
+// function toggleLeftDrawer() {
+//   leftDrawerOpen.value = !leftDrawerOpen.value;
+// }
+
+// const linksList = [
+//   {
+//     title: 'Home',
+//     caption: 'Página inicial',
+//     icon: 'dashboard',
+//     component: componentsMap.HomeContent,
+//   },
+//   {
+//     title: 'Favoritos',
+//     caption: 'Seus favoritos',
+//     icon: 'star_rate',
+//     component: componentsMap.FavoritosContent,
+//   },
+//   {
+//     title: 'Categorias',
+//     caption: 'Navegue por temas',
+//     icon: 'view_headline',
+//     component: componentsMap.CategoriasContent,
+//   },
+//   {
+//     title: 'Sobre',
+//     caption: 'Quem somos',
+//     icon: 'record_voice_over',
+//     component: componentsMap.SobreContent,
+//   },
+// ];
 </script>

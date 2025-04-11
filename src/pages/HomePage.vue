@@ -3,7 +3,9 @@
     <h4 class="text-blue-10">GIFs Trending</h4>
     <div class="bg-white w-full min-h-screen p-8 rounded-lg shadow-md">
       <SearchBar :chips="filterChips" @search="searchGifs" @reset="resetSearch" />
-      <h5 class="text-blue-10 mt-4">Trending Now</h5>
+      <h5 class="text-blue-10 mt-4 pb-5">
+        Trending Now <q-icon name="trending_up" color="blue-10" size="md" class="q-ml-sm" />
+      </h5>
       <q-spinner v-if="isLoading" color="primary" size="md" class="q-mb-md" />
       <div v-if="!isLoading">
         <p v-if="cards.length === 0" class="text-center text-gray-500">Nenhum GIF encontrado</p>

@@ -56,3 +56,13 @@ export const getCategories = async () => {
   });
   return response.data;
 };
+export const getSubCategories = async (type: string) => {
+  const response = await api.get(`gifs/categories/${type}?`, {
+    params: {
+      api_key: API_KEY,
+      pingback_id: "196249ce8184d18e"
+
+    },
+  });
+  return response.data;
+};

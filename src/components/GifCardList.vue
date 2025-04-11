@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-white flex flex-wrap justify-between gap-4 mt-4">
+  <div class="bg-white flex flex-wrap justify-between gap-4 mt-4" style="min-width: 238px">
     <q-card
       v-for="card in localCards"
       :key="card.id"
-      class="relative my-card w-full sm:w-60 overflow-hidden group"
+      class="my-card responsive-card relative overflow-hidden group"
       bordered
     >
       <img

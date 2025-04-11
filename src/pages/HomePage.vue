@@ -1,50 +1,101 @@
 <template>
-  <q-page class="p-4">
-    <q-input
-      v-model="searchTerm"
-      label="Buscar GIF"
-      outlined
-      debounce="500"
-      @update:model-value="searchGifs"
-    />
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-      <div v-for="gif in gifs" :key="gif.id" class="bg-gray-900 p-2 rounded">
-        <img :src="gif.images.fixed_height.url" :alt="gif.title" class="w-full rounded" />
-        <q-btn flat icon="star" @click="addToFavorites(gif)" color="yellow" />
+  <q-page class="p-4 flex flex-col gap-4">
+    <h4 class="text-blue-10">GIFs Trending</h4>
+    <div class="bg-white w-full min-h-screen p-8 rounded-lg shadow-md">
+      <SearchBar :chips="filterChips" @search="searchGifs" @reset="resetSearch" />
+      <h5 class="text-blue-10 mt-4">Trending Now</h5>
+      <q-spinner v-if="isLoading" color="primary" size="md" class="q-mb-md" />
+      <div v-if="!isLoading">
+        <p v-if="cards.length === 0" class="text-center text-gray-500">Nenhum GIF encontrado</p>
+        <GifCardList :cards="cards" />
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { LocalStorage } from 'quasar';
+import { ref, onMounted, watch } from 'vue';
+import type { Card } from '../types/giphy';
+import { useFavoritesStore } from '../stores/useFavoritesStore';
+import GifCardList from '../components/GifCardList.vue';
+import SearchBar from '../components/SearchBar.vue';
+import { getTrending, getTrendingGifs, searchTerms } from '../api/endpoints';
 
-interface Gif {
-  id: string;
-  title: string;
-  images: {
-    fixed_height: {
-      url: string;
-    };
-  };
-}
+const favoritesStore = useFavoritesStore();
 
+const cards = ref<Card[]>([]);
+const filterChips = ref<string[]>([]);
 const searchTerm = ref('');
-const gifs = ref<Gif[]>([]);
+const initialCards = ref<Card[]>([]);
+const isLoading = ref(false);
+const limit = ref<number>(25);
+const pageIndex = ref<number>(0);
 
-const searchGifs = async () => {
-  const apiKey = 'SUA_API_KEY_GIPHY'; // Substitua pela sua chave
-  const response = await fetch(
-    `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${encodeURIComponent(searchTerm.value)}&limit=20`,
-  );
-  const data = await response.json();
-  gifs.value = data.data;
+onMounted(async () => {
+  await loadInitialData();
+});
+
+watch(
+  () => favoritesStore.favorites,
+  () => updateFavorites(),
+);
+
+const loadInitialData = async () => {
+  favoritesStore.loadFavorites();
+  await fetchTrending(limit.value, pageIndex.value);
+  await trendingSearchTerms();
 };
 
-const addToFavorites = (gif: Gif) => {
-  const current: Gif[] = LocalStorage.getItem('favorites') || [];
-  const updated = [...current, gif].filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
-  LocalStorage.set('favorites', updated);
+const fetchTrending = async (itemsPerPage: number, currentPage: number) => {
+  isLoading.value = true;
+  try {
+    const response = await getTrendingGifs(itemsPerPage, currentPage);
+    cards.value = response.data;
+    initialCards.value = response.data;
+  } catch (error) {
+    console.error('Erro ao buscar GIFs em alta:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const trendingSearchTerms = async () => {
+  try {
+    const response = await getTrending();
+    filterChips.value = response.data;
+  } catch (error) {
+    console.error('Erro ao carregar termos de busca em alta:', error);
+  }
+};
+
+const updateFavorites = () => {
+  cards.value = cards.value.map((card: Card) => ({
+    ...card,
+    isFavorite: favoritesStore.isFavorite(card.id),
+  }));
+};
+
+const searchGifs = async (term: string) => {
+  searchTerm.value = term;
+  if (!term) {
+    cards.value = initialCards.value;
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    const response = await searchTerms(searchTerm.value, limit.value, pageIndex.value);
+    cards.value = response.data;
+  } catch (error) {
+    console.error('Erro ao buscar GIFs:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const resetSearch = () => {
+  searchTerm.value = '';
+  cards.value = initialCards.value;
+  isLoading.value = false;
 };
 </script>

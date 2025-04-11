@@ -1,10 +1,15 @@
 <template>
   <q-page class="p-4 flex flex-col gap-4">
     <h4 class="text-blue-10">Favoritos</h4>
-    <div class="bg-white w-full min-h-screen p-8 rounded-lg shadow-md">
-      <GifCardList :cards="favorites" />
+    <div
+      class="bg-white w-full min-h-screen p-6 md:p-8 rounded-xl shadow-md flex flex-wrap items-start"
+    >
+      <q-spinner v-if="isLoading" color="primary" size="md" class="mb-4" />
+
+      <div v-else class="flex flex-wrap items-start">
+        <GifCardList :cards="favorites" />
+      </div>
     </div>
-    <div v-if="favorites.length === 0" class="text-gray-300">Nenhum GIF favorito ainda!</div>
   </q-page>
 </template>
 
@@ -17,6 +22,7 @@ import { getFavoriteGifs } from 'src/api/endpoints';
 
 const favoritesStore = useFavoritesStore();
 const favorites = ref<Card[]>([]);
+const isLoading = ref(false);
 
 onMounted(() => {
   favoritesStore.loadFavorites();
@@ -33,10 +39,13 @@ const fetchFavoriteGifs = async () => {
   const idsParam = ids.join(',');
 
   try {
+    isLoading.value = true;
     const data = await getFavoriteGifs(idsParam);
     favorites.value = data.data;
   } catch (error) {
     console.error('Erro ao buscar GIFs favoritos:', error);
+  } finally {
+    isLoading.value = false;
   }
 };
 watch(

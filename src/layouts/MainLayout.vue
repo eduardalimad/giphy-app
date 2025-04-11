@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lFf" class="shadow-2">
+  <q-layout view="hHh Lpr lFf" class="shadow-2 bg-grey-12">
     <q-header elevated>
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
@@ -28,8 +28,9 @@
           </q-item>
         </q-list>
       </q-drawer>
-
-      <router-view />
+      <div class="q-pa-sm">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -47,50 +48,4 @@ const menuItems = [
   { to: '/categories', title: 'Categories', icon: 'view_headline' },
   { to: '/about', title: 'About', icon: 'record_voice_over' },
 ];
-// import { ref, shallowRef } from 'vue';
-// import HomeContent from 'components/contents/HomeContent.vue';
-// import FavoritosContent from 'components/contents/FavoritosContent.vue';
-// import CategoriasContent from 'components/contents/CategoriasContent.vue';
-// import SobreContent from 'components/contents/SobreContent.vue';
-
-// const componentsMap = {
-//   HomeContent,
-//   FavoritosContent,
-//   CategoriasContent,
-//   SobreContent,
-// };
-
-// const activeComponent = shallowRef(componentsMap['HomeContent']);
-
-// const leftDrawerOpen = ref(false);
-// function toggleLeftDrawer() {
-//   leftDrawerOpen.value = !leftDrawerOpen.value;
-// }
-
-// const linksList = [
-//   {
-//     title: 'Home',
-//     caption: 'Página inicial',
-//     icon: 'dashboard',
-//     component: componentsMap.HomeContent,
-//   },
-//   {
-//     title: 'Favoritos',
-//     caption: 'Seus favoritos',
-//     icon: 'star_rate',
-//     component: componentsMap.FavoritosContent,
-//   },
-//   {
-//     title: 'Categorias',
-//     caption: 'Navegue por temas',
-//     icon: 'view_headline',
-//     component: componentsMap.CategoriasContent,
-//   },
-//   {
-//     title: 'Sobre',
-//     caption: 'Quem somos',
-//     icon: 'record_voice_over',
-//     component: componentsMap.SobreContent,
-//   },
-// ];
 </script>

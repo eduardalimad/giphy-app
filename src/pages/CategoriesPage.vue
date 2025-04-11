@@ -1,27 +1,28 @@
 <template>
   <q-page class="p-4 flex flex-col gap-4">
-    <h4 class="text-blue-10">Categorias</h4>
+    <h4 class="text-blue-10 text-2xl font-semibold">{{ titlePage }}</h4>
 
-    <div class="bg-white w-full min-h-screen p-8 rounded-lg shadow-md">
-      <q-spinner v-if="isLoading" color="primary" size="md" class="q-mb-md" />
+    <div class="bg-white w-full min-h-screen p-6 md:p-8 rounded-xl shadow-md">
+      <q-spinner v-if="isLoading" color="primary" size="md" class="mb-4" />
 
       <div v-if="!isLoading && !selectedCategory">
-        <div class="flex flex-wrap gap-4 mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
           <div
             v-for="(item, id) in categories"
             :key="id"
+            @click="selectCategory(item.name_encoded)"
             class="cursor-pointer"
-            style="min-width: 238px"
-            @click="selectCategory(item.subcategories)"
           >
-            <q-card class="relative w-60 h-40 overflow-hidden">
+            <q-card class="relative h-40 overflow-hidden hover:scale-[1.02] transition-transform">
               <img
                 :src="item.gif.images.downsized_medium.url"
-                alt="Background"
-                class="absolute inset-0 w-full h-full object-cover"
+                alt="Categoria"
+                class="w-full h-full object-cover"
               />
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span class="text-white text-lg font-semibold">{{ item.name }}</span>
+                <span class="text-white text-lg font-semibold text-center px-2">{{
+                  item.name
+                }}</span>
               </div>
             </q-card>
           </div>
@@ -29,20 +30,22 @@
       </div>
 
       <div v-else-if="selectedCategory">
-        <div class="mb-4 flex items-center gap-2">
-          <q-btn flat icon="arrow_back" label="Voltar" @click="selectedCategory = null" />
+        <div class="mb-4">
+          <q-btn flat icon="arrow_back" label="Voltar" @click="goBack" />
         </div>
 
-        <div class="flex flex-wrap gap-4">
-          <div v-for="(gif, idx) in selectedCategory" :key="idx" class="w-full sm:w-60">
-            <q-card class="w-full h-60 overflow-hidden relative">
-              <!-- <img
-                :src="gif.images.downsized_medium.url"
-                alt="Gif"
-                class="absolute inset-0 w-full h-full object-cover"
-              /> -->
-              <div class="absolute bottom-0 w-full bg-black/40 text-white px-2 py-1 text-sm">
-                {{ gif.name || 'Sem título' }}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div v-for="(dados, id) in itensDados" :key="id">
+            <q-card class="relative h-40 overflow-hidden hover:scale-[1.02] transition-transform">
+              <img
+                :src="dados.gif.images.preview_gif.url"
+                alt="GIF"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <span class="text-white text-lg font-semibold text-center px-2">{{
+                  dados.name
+                }}</span>
               </div>
             </q-card>
           </div>
@@ -53,13 +56,15 @@
 </template>
 
 <script setup lang="ts">
-import { getCategories } from 'src/api/endpoints';
+import { getCategories, getSubCategories } from 'src/api/endpoints';
 import { onMounted, ref } from 'vue';
+import type { SubCategoryItem } from '../types/giphy';
 
 const isLoading = ref(false);
-
-const categories = ref([]);
-const selectedCategory = ref(null);
+const categories = ref<SubCategoryItem[]>([]);
+const selectedCategory = ref<string>('');
+const itensDados = ref<SubCategoryItem[]>([]);
+const titlePage = ref('Categorias');
 
 onMounted(async () => {
   await fetchTrending();
@@ -70,15 +75,33 @@ const fetchTrending = async () => {
   try {
     const response = await getCategories();
     categories.value = response.data;
-    // initialCards.value = response.data;
   } catch (error) {
-    console.error('Erro ao buscar GIFs em alta:', error);
+    console.error('Erro ao buscar categorias:', error);
   } finally {
     isLoading.value = false;
   }
 };
-const selectCategory = (item: any) => {
-  selectedCategory.value = item;
+
+const fetchSubCategory = async (id: string) => {
+  isLoading.value = true;
+  try {
+    const response = await getSubCategories(id);
+    itensDados.value = response.data;
+  } catch (error) {
+    console.error('Erro ao buscar GIFs:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const goBack = () => {
+  selectedCategory.value = '';
+  titlePage.value = 'Categorias';
+};
+
+const selectCategory = (nameCode: string) => {
+  selectedCategory.value = nameCode;
+  titlePage.value = nameCode.charAt(0).toUpperCase() + nameCode.slice(1);
+  void fetchSubCategory(nameCode);
 };
 </script>
-<style scoped></style>

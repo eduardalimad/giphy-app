@@ -25,6 +25,7 @@ export interface Card {
   id: string;
   images: {
     original: GifImage;
+
   };
   import_datetime: string;
   is_sticker: number;
@@ -38,3 +39,34 @@ export interface Card {
   type: string;
   url: string;
 }
+export interface SubCategoryItem {
+  gif: {
+    type: string;
+    id: string;
+    images: {
+      preview_gif: {
+        url: string;
+      };
+      downsized_medium: {
+        url: string;
+      };
+    };
+  };
+  name: string;
+  name_encoded: string;
+}
+
+export interface GifImageSubCategory {
+  type: string;
+  id: string;
+  images: {
+    downsized_medium: {
+      url: string;
+    };
+    preview_gif?: {
+      url: string;
+    };
+  };
+}
+
+

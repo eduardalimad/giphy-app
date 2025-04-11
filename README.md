@@ -1,40 +1,71 @@
-# Quasar App (giphy-app)
+# GIF's Trending 🚀
 
-A Quasar Project
+Aplicação frontend desenvolvida para visualização e gerenciamento de GIF's
 
-## Install the dependencies
+## Tecnologias 📦
+
+- [Quasar](https://quasar.dev/)
+- [Vue 3](https://vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Axios](https://axios-http.com/ptbr/)
+- [Pinia](https://pinia.vuejs.org/)
+- [Vite](https://vitejs.dev/)
+
+## Configuração e Instalação 🔥
+
+Configure as variáveis de ambiente
+
 ```bash
-yarn
-# or
-npm install
+VITE_API_KEY=api_key
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
+1. Clone o projeto para sua máquina
 
+   ```bash
+   git clone https://github.com/eduardalimad/giphy-app.git
 
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
+   ou
 
+   git clone git@github.com:eduardalimad/giphy-app.git
+   ```
 
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
+2. Acesse a pastar do repositório
 
+   ```bash
+   cd giphy-app
+   ```
 
-### Build the app for production
-```bash
-quasar build
-```
+3. Instale as dependências
 
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+   ```bash
+   npm install
+   ```
+
+4. Execute o projeto
+
+   ```bash
+   npm run dev
+
+   ou
+
+   quasar dev
+
+   ou
+
+   npx quasar dev
+   ```
+
+5. Acessar a url da aplicação local
+
+   ```bash
+    http://localhost:9000/
+   ```
+
+## Contribuição 👩‍💻
+
+**_[Maria Eduarda Lima Duarte](https://github.com/eduardalimad)_**
+
+Front-end Developer | Dev Freelancer | Vue.js | Nuxt.js | React Native e mais...
+
+- [LinkedIn](https://www.linkedin.com/in/dev-eduarda-lima/)
+- [GitHub](https://github.com/eduardalimad)

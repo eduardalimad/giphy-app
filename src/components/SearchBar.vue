@@ -44,7 +44,7 @@
         <q-scroll-area ref="scrollAreaRef" class="chip-scroll-area" horizontal>
           <div class="row no-wrap items-center">
             <q-chip
-              v-for="chip in props.chips"
+              v-for="chip in filteredChips"
               :key="chip"
               clickable
               @click="applyChip(chip)"
@@ -61,13 +61,13 @@
 
       <div class="bg-transparent">
         <q-btn
-          v-show="showLeftButton"
           dense
           flat
           round
           icon="chevron_right"
           @click="scrollForward"
           aria-label="Scroll para a direita"
+          :class="{ 'opacity-0': !showRightButton }"
         />
       </div>
     </div>
@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { QScrollArea } from 'quasar';
-import { ref, onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
+import { ref, onMounted, watch, nextTick, onBeforeUnmount, computed } from 'vue';
 
 const props = defineProps<{ chips: string[] }>();
 const emit = defineEmits(['search', 'reset']);
@@ -87,7 +87,12 @@ const searchTerm = ref('');
 const scrollAreaRef = ref<QScrollArea | null>(null);
 const showLeftButton = ref(false);
 const showRightButton = ref(true);
+const selectedChip = ref<string | null>(null);
 const SCROLL_STEP = 250;
+
+const filteredChips = computed(() => {
+  return selectedChip.value ? [selectedChip.value] : props.chips;
+});
 
 onMounted(async () => {
   await nextTick();
@@ -132,6 +137,7 @@ function scrollBackward() {
 
   setTimeout(verificarScrollChips, 350);
 }
+
 function handleInput() {
   if (debounceTimeout) {
     clearTimeout(debounceTimeout);
@@ -152,12 +158,14 @@ function search() {
 function reset() {
   searchTerm.value = '';
   emit('reset');
+  selectedChip.value = null;
   showLeftButton.value = false;
   showRightButton.value = true;
   verificarScrollChips();
 }
 
 function applyChip(chip: string) {
+  selectedChip.value = chip;
   searchTerm.value = chip;
   handleInput();
 }

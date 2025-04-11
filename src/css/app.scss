@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
 .q-scrollarea__thumb {
   background: transparent !important;
 }
@@ -10,6 +17,7 @@
 h4,
 h5 {
   text-align: left;
+  font-weight: 600;
 }
 
 .q-page .q-spinner {

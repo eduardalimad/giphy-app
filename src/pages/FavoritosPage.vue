@@ -4,10 +4,14 @@
     <div
       class="bg-white w-full min-h-screen p-6 md:p-8 rounded-xl shadow-md flex flex-wrap items-start"
     >
-      <q-spinner v-if="isLoading" color="primary" size="md" class="mb-4" />
-
-      <div v-else class="flex flex-wrap items-start">
-        <GifCardList :cards="favorites" />
+      <div v-if="isLoading" class="flex flex items-center justify-center h-screen w-full">
+        <q-spinner color="primary" size="md" class="mb-4" />
+      </div>
+      <div v-else class="flex flex-wrap justify-evenly gap-8 w-full">
+        <div v-if="favorites.length === 0" class="text-center text-gray-500">
+          Nenhum favorito encontrado.
+        </div>
+        <GifCardList v-else :cards="favorites" />
       </div>
     </div>
   </q-page>

@@ -1,8 +1,8 @@
 <template>
   <q-page class="q-pa-md">
     <q-card flat bordered class="q-pa-lg">
-      <q-card-section class="row items-center q-col-gutter-md">
-        <AvatarUser />
+      <q-card-section class="row items-center q-gutter-md">
+        <AvatarUser sizeImage="70px" />
         <div>
           <div class="text-h5">Sobre o Desenvolvedor</div>
           <div class="text-subtitle2 q-mt-xs">Informações do criador desta aplicação</div>
@@ -12,7 +12,7 @@
       <q-separator />
 
       <q-card-section>
-        <q-item>
+        <q-item class="q-pa-none">
           <q-item-section>
             <q-item-label class="text-subtitle1">
               <strong>Nome:</strong> Maria Eduarda Lima Duarte
@@ -58,7 +58,7 @@
       <q-separator spaced />
 
       <q-card-section>
-        <div class="text-h6 q-mb-md">Stacks Utilizadas</div>
+        <div class="text-h6">Stacks Utilizadas</div>
         <div class="row items-center q-col-gutter-md q-gutter-md">
           <img
             v-for="stack in stacks"

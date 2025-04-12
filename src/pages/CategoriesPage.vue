@@ -3,52 +3,38 @@
     <h4 class="text-blue-10 text-2xl font-semibold">{{ titlePage }}</h4>
 
     <div class="bg-white w-full min-h-screen p-6 md:p-8 rounded-xl shadow-md">
-      <q-spinner v-if="isLoading" color="primary" size="md" class="mb-4" />
-
-      <div v-if="!isLoading && !selectedCategory">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
-          <div
-            v-for="(item, id) in categories"
-            :key="id"
-            @click="selectCategory(item.name_encoded)"
-            class="cursor-pointer"
-          >
-            <q-card class="relative h-40 overflow-hidden hover:scale-[1.02] transition-transform">
-              <img
-                :src="item.gif.images.downsized_medium.url"
-                alt="Categoria"
-                class="w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span class="text-white text-lg font-semibold text-center px-2">{{
-                  item.name
-                }}</span>
-              </div>
-            </q-card>
-          </div>
-        </div>
+      <div v-if="isLoading" class="flex flex items-center justify-center h-screen">
+        <q-spinner color="primary" size="md" />
       </div>
 
-      <div v-else-if="selectedCategory">
-        <div class="mb-4">
-          <q-btn flat icon="arrow_back" label="Voltar" @click="goBack" />
+      <div v-else>
+        <div v-if="!selectedCategory">
+          <div
+            v-if="categories.length"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4"
+          >
+            <CategoryCard
+              v-for="(item, id) in categories"
+              :key="id"
+              :item="item"
+              @select-category="selectCategory"
+            />
+          </div>
+          <div v-else class="text-center text-gray-500">Nenhuma categoria encontrada.</div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <div v-for="(dados, id) in itensDados" :key="id">
-            <q-card class="relative h-40 overflow-hidden hover:scale-[1.02] transition-transform">
-              <img
-                :src="dados.gif.images.preview_gif.url"
-                alt="GIF"
-                class="w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span class="text-white text-lg font-semibold text-center px-2">{{
-                  dados.name
-                }}</span>
-              </div>
-            </q-card>
+        <div v-else>
+          <div class="mb-4">
+            <q-btn flat icon="arrow_back" label="Voltar" @click="goBack" />
           </div>
+
+          <div
+            v-if="itensDados.length"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            <CategoryCard v-for="(dados, id) in itensDados" :key="id" :item="dados" />
+          </div>
+          <div v-else class="text-center text-gray-500">Nenhum GIF encontrado nesta categoria.</div>
         </div>
       </div>
     </div>
@@ -56,9 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import { getCategories, getSubCategories } from 'src/api/endpoints';
 import { onMounted, ref } from 'vue';
+import { getCategories, getSubCategories } from 'src/api/endpoints';
 import type { SubCategoryItem } from '../types/giphy';
+import CategoryCard from '../components/CategoryCard.vue';
 
 const isLoading = ref(false);
 const categories = ref<SubCategoryItem[]>([]);

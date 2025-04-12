@@ -1,6 +1,6 @@
 # GIF's Trending 🚀
 
-Aplicação frontend desenvolvida para visualização e gerenciamento de GIF's
+Aplicação frontend desenvolvida para visualização e gerenciamento de GIFs, com integração à API do Giphy para consumo de conteúdos animados.
 
 ## Tecnologias 📦
 

@@ -10,9 +10,7 @@
 
           <div class="row items-center">
             <q-toolbar-title class="username"> MARIA EDUARDA </q-toolbar-title>
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/avatar.png" alt="User" />
-            </q-avatar>
+            <AvatarUser sizeImage="40px" />
           </div>
         </div>
       </q-toolbar>
@@ -59,6 +57,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import AvatarUser from '../components/AvatarUser.vue';
 
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
@@ -74,8 +73,15 @@ const menuItems = [
 <style lang="scss" scoped>
 .custom-toolbar {
   background-color: $primary;
+
   .username {
     font-weight: 600;
+  }
+
+  @media (max-width: 438px) {
+    .username {
+      display: none;
+    }
   }
 }
 </style>

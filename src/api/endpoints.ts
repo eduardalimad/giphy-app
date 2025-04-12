@@ -3,12 +3,11 @@ import { api } from '../boot/axios';
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const getTrendingGifs = async (limit: number, page: number) => {
-  const offset = page * limit;
   const response = await api.get(`gifs/trending`, {
     params: {
       api_key: API_KEY,
       limit,
-      offset,
+      page,
       rating: 'g',
       bundle: 'sticker_layering',
     },
